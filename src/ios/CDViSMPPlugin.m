@@ -85,7 +85,7 @@
         
             // getting returned info
             details = [terminal getStatusDetails];
-            
+            NSLog(@"- getTerminalStatus [ %@ ] ", details);
             // parsing status
             NSString *respcode = [self extractNode:details :@"ResponseCode"];
             NSString *opmessage = [self extractNode:details :@"OperatorMessage"];
