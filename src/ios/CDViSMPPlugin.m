@@ -112,7 +112,8 @@
 -(NSString*) extractNode: (NSString*)chunk :(NSString*) node {
 
     NSString* content = nil;
-
+    NSLog(@"- Show chunk %@ ...", chunk);
+    
     @try {
         NSLog(@"- Parsing XML looking for %@ ...", node);
         NSString* openTag  = [[@"<"  stringByAppendingString:node] stringByAppendingString:@">"];
