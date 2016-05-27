@@ -1,6 +1,6 @@
 //
 //  ICTransaction.h
-//  iSMP Library
+//  PCL Library
 //
 //  Created by Christophe Fontaine on 21/06/10.
 //  Copyright 2010 Ingenico. All rights reserved.

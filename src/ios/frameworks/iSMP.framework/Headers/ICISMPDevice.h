@@ -1,6 +1,6 @@
 //
 //  ICISMPDevice.h
-//  iSMP Library
+//  PCL Library
 //
 //  Created by Christophe Fontaine on 21/06/10.
 //  Copyright 2010 Ingenico. All rights reserved.
@@ -11,23 +11,47 @@
 
 @protocol ICISMPDeviceDelegate;
 
+typedef enum {
+    ISMP_Result_SUCCESS = 0,                                   /**< The call succeeded */
+    ISMP_Result_ISMP_NOT_CONNECTED,                            /**< The call failed because the Companion is not connected */
+    ISMP_Result_Failure,                                       /**< The call failed for an unknown reason */
+    ISMP_Result_TIMEOUT,                                       /**< The call failed because the timeout was reached. No response was received from the iSMP */
+
+    //Key Injection Error Codes
+    ISMP_Result_KEY_INJECTION_ABORTED,                         /**< Key Injection Aborted */
+    ISMP_Result_KEY_INJECTION_KEY_NOT_FOUND,                   /**< Key Injection failed because no key was found on the server */
+    ISMP_Result_KEY_INJECTION_INVALID_HTTP_FILE,               /**< Key Injection failed because the returned HTTP file is invalid */
+    ISMP_Result_KEY_INJECTION_INVALID_HTTP_RESPONSE,           /**< Key Injection failed because the returned HTTP response is not 200 OK */
+    ISMP_Result_KEY_INJECTION_INVALID_HTTP_HEADER,             /**< Key Injection failed because the returned HTTP header is invalid */
+    ISMP_Result_KEY_INJECTION_SSL_NEW_ERROR,                   /**< Key Injection failed because of an SSL initialization failure */
+    ISMP_Result_KEY_INJECTION_SSL_CONNECT_ERROR,               /**< Key Injection failed because the connection to the server can not be established */
+    ISMP_Result_KEY_INJECTION_SSL_READ_ERROR,                  /**< Key Injection failed because of an SSL reading error */
+    ISMP_Result_KEY_INJECTION_SSL_WRITE_ERROR,                 /**< Key Injection failed because of an SSL writing error */
+    ISMP_Result_KEY_INJECTION_SSL_PROFILE_ERROR,               /**< Key Injection failed because of an SSL profile error */
+    ISMP_Result_KEY_INJECTION_INTERNAL_ERROR,                  /**< Key Injection failed because of an internal error */
+
+    ISMP_Result_ENCRYPTION_KEY_NOT_FOUND,                      /**< The encryption key does not exist within the Companion */
+    ISMP_Result_ENCRYPTION_KEY_INVALID,                        /**< The encryption key is not valid */
+    ISMP_Result_ENCRYPTION_DLL_MISSING                         /**< The encryption DLL is missing within the Companion */
+} iSMPResult;
+
 @interface ICISMPDevice : NSObject <NSStreamDelegate> {
-	// external accessory management
-	NSString				* protocolName;                             /**< IAP protocol name that the @ref ICISMPDevice use for communication with the SPM */
-	EASession				* _cradleSession;                           /**< The IAP session opened by the @ref ICISMPDevice to the SPM */
-	BOOL					  isAvailable;                              /**< SPM connection state */
+	// Companion management
+	NSString				* protocolName;                             /**< IAP protocol name that the @ref ICISMPDevice use for communication with the Companion */
+	EASession				* _cradleSession;                           /**< The IAP session opened by the @ref ICISMPDevice to the Companion */
+	BOOL					  isAvailable;                              /**< Companion connection state */
 	
 	NSOutputStream			* outStream;                                /**< Serial output stream */
 	NSInputStream			* inStream;                                 /**< Serial input stream */
 	
 	// iSMP Messages Processing
 	NSRecursiveLock			* _inDataLock;                              /**< Used to synchronize access to received data buffer */
-	NSMutableData			* _inStreamData;                            /**< Data received from SPM */
+	NSMutableData			* _inStreamData;                            /**< Data received from Companion */
 	NSMutableDictionary		* _actionLookupTable;                       /**< Map TLV tags to selectors */
 	BOOL					  mustProcessReceivedDataOnCurrentThread;   /**< Indicates whether data should be processed in the communication thread (NO by default, messages are processed on the main thread) */
-	NSArray					* _spmResponseTags;                         /**< List of all SPM's response Tags on a given channel */
+	NSArray					* _spmResponseTags;                         /**< List of all Companion's response Tags on a given channel */
 	
-	NSOperationQueue		* _requestOperationQueue;                   /**< This operation queue serializes the send operations to the SPM */
+	NSOperationQueue		* _requestOperationQueue;                   /**< This operation queue serializes the send operations to the Companion */
 	
 	id<ICISMPDeviceDelegate>	  _delegate;                                /**< Delegate of the @ref ICISMPDevice Class */
 	

@@ -11,7 +11,7 @@
 #define __REVISION_H_
 
 // ICISPMSvnVersion : UNKNOWN
-// ICISPMVersion    : iSMP v3.4
+// ICISPMVersion    : iSMP v4.00
 
 extern NSString * ICISMPSvnVersion;
 extern NSString * ICISMPVersion;

@@ -1,6 +1,6 @@
 //
 //  ICAdministration.h
-//  iSMP Library
+//  PCL Library
 //
 //  Created by Hichem Boussetta on 19/07/10.
 //  Copyright 2010 Ingenico. All rights reserved.
@@ -11,8 +11,8 @@
 #import "ICISMPDevice.h"
 
 typedef struct {
-	NSInteger		serialNumber;                       /**< The device's serial number */
-	NSInteger		reference;                          /**< The device's software reference number */
+	NSInteger		serialNumber;                       /**< The device's truncated serial number (8 last digits) */
+	NSInteger		reference;                          /**< The device's part number */
 	char			protocol[20];                       /**< The payment protocol used by the device */
 } ICDeviceInformation;
 
@@ -51,28 +51,8 @@ enum eICDeviceSoftwareComponentType {
 };
 
 typedef enum {
-    ISMP_Result_SUCCESS = 0,                                   /**< The call succeeded */
-    ISMP_Result_ISMP_NOT_CONNECTED,                            /**< The call failed because the iSMP is not connected */
-    ISMP_Result_Failure,                                       /**< The call failed for an unknown reason */
-    ISMP_Result_TIMEOUT,                                       /**< The call failed because the timeout was reached. No response was received from the iSMP */
-
-    //Key Injection Error Codes
-    ISMP_Result_KEY_INJECTION_ABORTED,                         /**< Key Injection Aborted */
-    ISMP_Result_KEY_INJECTION_KEY_NOT_FOUND,                   /**< Key Injection failed because no key was found on the server */
-    ISMP_Result_KEY_INJECTION_INVALID_HTTP_FILE,               /**< Key Injection failed because the returned HTTP file is invalid */
-    ISMP_Result_KEY_INJECTION_INVALID_HTTP_RESPONSE,           /**< Key Injection failed because the returned HTTP response is not 200 OK */
-    ISMP_Result_KEY_INJECTION_INVALID_HTTP_HEADER,             /**< Key Injection failed because the returned HTTP header is invalid */
-    ISMP_Result_KEY_INJECTION_SSL_NEW_ERROR,                   /**< Key Injection failed because of an SSL initialization failure */
-    ISMP_Result_KEY_INJECTION_SSL_CONNECT_ERROR,               /**< Key Injection failed because the connection to the server can not be established */
-    ISMP_Result_KEY_INJECTION_SSL_READ_ERROR,                  /**< Key Injection failed because of an SSL reading error */
-    ISMP_Result_KEY_INJECTION_SSL_WRITE_ERROR,                 /**< Key Injection failed because of an SSL writing error */
-    ISMP_Result_KEY_INJECTION_SSL_PROFILE_ERROR,               /**< Key Injection failed because of an SSL profile error */
-    ISMP_Result_KEY_INJECTION_INTERNAL_ERROR,                  /**< Key Injection failed because of an internal error */
-
-    ISMP_Result_ENCRYPTION_KEY_NOT_FOUND,                      /**< The encryption key does not exist within the iSMP */
-    ISMP_Result_ENCRYPTION_KEY_INVALID,                        /**< The encryption key is not valid */
-    ISMP_Result_ENCRYPTION_DLL_MISSING                         /**< The encryption DLL is missing within the iSMP */
-} iSMPResult;
+    SPP_Apple                                           /**< SPP Apple */
+} iSMPPeripheral;
 
 @interface ICSoftwareComponent : NSObject
 
@@ -120,7 +100,7 @@ typedef enum {
 -(BOOL)setBacklightTimeout:(NSUInteger)backlightTimeout andSuspendTimeout:(NSUInteger)suspendTimeout;
 
 #pragma mark -
-#pragma mark iSMP Management
+#pragma mark Companion Management
 
 -(BOOL)setDate;
 
@@ -128,7 +108,11 @@ typedef enum {
 
 -(BOOL)isIdle;
 
+-(int)getPeripheralStatus:(iSMPPeripheral)device;
+
 -(ICDeviceInformation)getInformation;
+
+-(NSString*)getFullSerialNumber;
 
 -(void)reset:(NSUInteger)resetInfo;
 
@@ -138,9 +122,9 @@ typedef enum {
 
 -(BOOL)startRemoteDownload;
 
--(BOOL)updateKeyWithServerIP:(NSString *)ip andPort:(NSUInteger)port __attribute__((deprecated));
-
 -(iSMPResult)updateEncryptionKeyWithServerIP:(NSString *)ip andPort:(NSUInteger)port;
+
+-(iSMPResult)updateEncryptionKeyWithServerByHostName:(NSString *)hostname andPort:(NSUInteger)port;
 
 -(iSMPResult)validateEncryptionKey;
 

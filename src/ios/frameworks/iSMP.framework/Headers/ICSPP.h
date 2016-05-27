@@ -1,6 +1,6 @@
 //
 //  ICSPP.h
-//  iSMP Library
+//  PCL Library
 //
 //  Created by Hichem Boussetta on 24/05/12.
 //  Copyright (c) 2012 Ingenico. All rights reserved.

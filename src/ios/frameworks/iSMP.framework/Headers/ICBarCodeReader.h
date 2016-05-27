@@ -1,6 +1,6 @@
 //
 //  ICBarCodeReader.h
-//  iSMP Library
+//  PCL Library
 //
 //  Created by Christophe Fontaine on 21/06/10.
 //  Copyright 2010 Ingenico. All rights reserved.
@@ -27,9 +27,19 @@
 
 -(void)triggerReleased;
 
+/*
+    anchor     onScanMiscEvent:
+    brief      Other events coming from the barcode
+    <p>
+        These events have not been defined yet, they include :
+        <ul>
+            <li>Decoding events : unsuccessful decoding, start of read session, end of read session</li>
+            <li>Hardware events : start-up, setup modification by reading a configuration barcode, configuration barcode rejected</li>
+        </ul>
+    </p>
+    param eventCode An event code constant [NOT USED]
+*/
 -(void)onScanMiscEvent:(int)eventCode; // other scan events
-
--(void)onConfigurationApplied __attribute__((deprecated));
 
 - (void)barcodeLogEntry:(NSString *)logEntry withSeverity:(int)severity;
 
@@ -61,6 +71,8 @@
 	NSInteger						currentImagerMode;
 	NSString						*firmwareVersion;
     BOOL                            shouldRequestConfiguration;
+    NSMutableData                   *picture;
+    NSInteger                       sizeOfPicture;
 }
 
 #pragma mark BarcodeConstants
@@ -77,15 +89,13 @@
 
 -(void)stopScan;
 
+-(void)startSnapshot;
+
 #pragma mark Configuration related functions
 
 -(void)bufferWriteCommands;
 
 -(void)unbufferSetupCommands;
-
--(BOOL)shouldApplyDefaultConfiguration __attribute__((deprecated));     //NOT REQUIRED ANYMORE
-
--(void)applyDefaultConfiguration __attribute__((deprecated)); //NOT REQUIRED ANYMORE
 
 -(void)configureBarCodeReaderMode:(int)mode; // for the mode, refers to eICBarCode_ScanMode
 
@@ -125,12 +135,11 @@ enum eICBarCodeSymbologies {
 	ICBarCode_UPCE_5,                           /**< UPCE_5 Barcode Type */
 	
 	ICBarCode_Code39,                           /**< Code39 Barcode Type */
-	// id 14 reserved
+
 	ICBarCode_Interleaved2of5 = 15,             /**< Interleaved2of5 Barcode Type */
 	ICBarCode_Standard2of5,                     /**< Standard2of5 Barcode Type */
 	ICBarCode_Matrix2of5,                       /**< Matrix2of5 Barcode Type */
 	
-	//id 18 reserved
 	ICBarCode_CodaBar = 19,                     /**< CodeBar Barcode Type */
 	ICBarCode_AmesCode,                         /**< AmesCode Barcode Type */
 	ICBarCode_MSI,                              /**< MSI Barcode Type */
@@ -148,7 +157,6 @@ enum eICBarCodeSymbologies {
 	ICBarCode_CodaBlockA,                       /**< CodeBlockA Barcode Type */
 	ICBarCode_CodaBlockF,                       /**< CodaBlockF Barcode Type */
 	
-	//id 32 reserved
 	ICBarCode_PDF417 = 33,                      /**< PDF417 Barcode Type */
 	ICBarCode_GS1_128, // Replace EAN128        /**< GS1_128 Barcode Type */
 	ICBarCode_ISBT128,                          /**< ISBT128 Barcode Type */
@@ -161,6 +169,7 @@ enum eICBarCodeSymbologies {
 	ICBarCode_DataMatrix,                       /**< DataMatrix Barcode Type */
     ICBarCode_QRCode,                           /**< QRCode Barcode Type */
 	ICBarCode_Maxicode,                         /**< Maxicode Barcode Type */
+    ICBarCode_UPCE1,                            /**< UPC-E1 Barcode Type */
 
     ICBarCode_Aztec = 0x4A,                     /**< Aztec Barcode Type */
 	
@@ -177,7 +186,7 @@ enum eICBarCode_ImagerMode {
 	ICBarCodeImagerMode_1D,                     /**< 1D */
 	ICBarCodeImagerMode_1D2D,                   /**< 1D and 2D standard */
 	ICBarCodeImagerMode_1D2D_bright,            /**< 1D and 2D bright environment */
-	ICBarCodeImagerMode_1D2D_reflective         /**< 11D and 2D reflective surface */
+	ICBarCodeImagerMode_1D2D_reflective         /**< 1D and 2D reflective surface */
 };
 
 #pragma mark -
@@ -201,7 +210,7 @@ enum eICBarCode_IlluminationMode {
 
 enum eICBarCode_LightingMode {
 	illuminiationLEDPriority,       /**< Shorter exposure time  */
-	aperturePriority                /**< Use aperture priority if you have a shiny bar code label */
+	aperturePriority                /**< Use aperture priority if you have a shiny barcode label */
 };
 
 -(void)lightingMode:(int)priorityType; // priorityType: eICBarCode_LightingMode

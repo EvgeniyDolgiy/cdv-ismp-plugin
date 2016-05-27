@@ -1,6 +1,6 @@
 //
 //  ICISMPDeviceExtension.h
-//  iSMP Library
+//  PCL Library
 //
 //  Created by Boris LECLERE on 7/18/12.
 //  Copyright (c) 2012 Ingenico. All rights reserved.
@@ -39,11 +39,9 @@
 
 @protocol ICISMPDeviceExtensionDelegate <ICISMPDeviceDelegate>
 
-//@required
+@optional
 
 -(void)didReceiveData:(NSData *)Data fromICISMPDevice:(ICISMPDevice *)Sender;
-
-@optional
 
 -(void)willReceiveData:(ICISMPDevice *)Sender;
 

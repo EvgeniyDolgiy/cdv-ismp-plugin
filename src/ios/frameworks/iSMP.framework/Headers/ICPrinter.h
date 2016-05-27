@@ -1,6 +1,6 @@
 //
 //  ICPrinter.h
-//  iSMP Library
+//  PCL Library
 //
 //  Created by Christophe Fontaine on 22/06/10.
 //  Copyright 2010 Ingenico. All rights reserved.
@@ -16,7 +16,7 @@
 	
 	NSUInteger			  _microlineCount;                      /**< The number of received microlines during a print session */
 	
-	NSUInteger			  _microlineNumber;                     /**< The microline number sent by the SPM (contains the microline number in the first 3 bytes, and the printing session in the last byte) */
+	NSUInteger			  _microlineNumber;                     /**< The microline number sent by the Companion (contains the microline number in the first 3 bytes, and the printing session in the last byte) */
 }
 
 +(id)sharedPrinter;
